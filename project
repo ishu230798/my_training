@@ -1,0 +1,91 @@
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as ec
+import os
+import time
+# chrome_options = Options()
+# options = Options()
+chrome_options = webdriver.ChromeOptions()
+chrome_options.add_argument('--disable-notifications')  # Disable notifications
+chrome_options.add_argument('--disable-geolocation')
+# import pdb;pdb.set_trace()
+driver=webdriver.Chrome(options = chrome_options,executable_path=r'C:\driver\chromedriver.exe')
+# options=Options()
+time.sleep(2)
+driver.maximize_window()
+time.sleep(2)
+
+driver.get('https://www.shopclues.com/')
+time.sleep(10)
+# pop up
+try:
+    driver.find_element_by_xpath('/html/body/div[1]/div/div/div[3]/div[1]/button[1]').click()
+except:
+    pass
+
+def process(new):
+    time.sleep(3)
+    driver.find_element_by_xpath('//*[@id="autocomplete"]').send_keys(new)
+    time.sleep(5)
+    # import pdb;pdb.set_trace()
+    driver.find_element_by_xpath('//*[@id="search"]/a').click()
+    time.sleep(7)
+    # import pdb;pdb.set_trace()
+    driver.refresh()
+    time.sleep(5)
+    driver.refresh()
+    time.sleep(5)
+    try:
+        driver.find_element_by_xpath('//*[@id="det_img_147007305"]').click()
+    except:
+        try:
+            driver.find_element_by_xpath('//*[@id="det_img_153101595"]').click()
+        except:
+            try:
+                driver.find_element_by_xpath('//*[@id="det_img_151746468"]').click()
+            except:
+                try:
+                    driver.find_element_by_xpath('//*[@id="det_img_153090516"]').click()
+                except:
+                    driver.find_element_by_xpath('//*[@id="det_img_146684380"]').click()
+    p_d=driver.current_url
+    all=driver.window_handles
+    print(all)
+    time.sleep(10)
+    for i in all:
+        if i != p_d:
+            # import pdb;pdb.set_trace()
+            driver.switch_to.window(i)
+            # for j in range(1,6):
+            #     driver.switch_to.window(driver.window_handles[i])
+            if new =='headphone':
+                driver.switch_to.window(driver.window_handles[1])
+            elif new =='laptop':
+                driver.switch_to.window(driver.window_handles[2])
+            elif new == 'doll':
+                driver.switch_to.window(driver.window_handles[3])
+            elif new == 'dolphin':
+                driver.switch_to.window(driver.window_handles[4])
+            elif new == 'Watches':
+                driver.switch_to.window(driver.window_handles[5])
+            time.sleep(2)
+            driver.find_element_by_xpath('//*[@id="add_cart"]').click()
+            time.sleep(20)
+            break
+        driver.switch_to.window(p_d)
+
+def cart_final():
+    driver.find_element_by_xpath('/html/body/div[3]/div/div/div[4]/ul/li[4]/a/span').click()
+    driver.get_screenshot_as_file(".\\cart1.png")
+    driver.execute_script('window.scrollTo(0,500)')
+    driver.get_screenshot_as_file('.\\cart_2.png')
+product=['headphone','laptop','doll','dolphin','Watches']
+for p in product:
+    print(p)
+    process(p)
+
+cart_final()
+
+driver.quit()
